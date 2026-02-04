@@ -17,6 +17,10 @@ const (
 	// require the plugin vm to upgrade to latest node release to be
 	// compatible.
 	RPCChainVMProtocol uint = 42
+	// RPCDAGVMProtocol should be bumped anytime changes are made which
+	// require the DAG plugin vm to upgrade to latest node release to be
+	// compatible.
+	RPCDAGVMProtocol uint = 1
 )
 
 // These variables are set at build time via ldflags from git tag:
