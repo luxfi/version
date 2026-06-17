@@ -1,4 +1,4 @@
-# LLM.md - Hanzo Version
+# Hanzo Version
 
 ## Overview
 Go module: github.com/luxfi/version
