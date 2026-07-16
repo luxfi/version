@@ -13,9 +13,26 @@ import (
 
 const (
 	Client = "luxd"
-	// RPCChainVMProtocol should be bumped anytime changes are made which
-	// require the plugin vm to upgrade to latest node release to be
-	// compatible.
+	// RPCChainVMProtocol is the node<->plugin (rpcchainvm) wire-protocol version
+	// and the ONE canonical definition of it: github.com/luxfi/api/zap and the
+	// github.com/luxfi/vm plugin server both read RPCChainVMProtocol from here.
+	// (github.com/luxfi/node/version carries an independent copy of the same
+	// value; that duplicate should be collapsed to re-export THIS constant —
+	// node already requires github.com/luxfi/version and this module never
+	// imports node, so there is no cycle — so a future bump can never land on
+	// only one of the two. Both are 42 today, so no skew exists.)
+	//
+	// BUMP THIS on ANY change to a ZAP VM-wire struct (github.com/luxfi/api/zap
+	// Encode/Decode: Initialize/SetState/Block/Quasar/...) that an existing peer
+	// cannot decode without the new code — a field inserted mid-struct, a
+	// reorder, a type change, or a removed field. APPENDING a new TRAILING field
+	// is EXEMPT iff its Decode is length-tolerant (guarded on Reader.Remaining());
+	// that is the forward-safe evolution path and needs no bump. History: api
+	// v1.0.16 appended InitializeResponse.Capabilities WITHOUT length-tolerance
+	// AND without bumping this constant → stale plugins hit "unexpected EOF"
+	// decoding Initialize (the v1.36.11 incident). InitializeResponse.Decode is
+	// length-tolerant as of that fix, so 42 now safely spans both the pre- and
+	// post-Capabilities wire.
 	RPCChainVMProtocol uint = 42
 	// RPCDAGVMProtocol should be bumped anytime changes are made which
 	// require the DAG plugin vm to upgrade to latest node release to be
